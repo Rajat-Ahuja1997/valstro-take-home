@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  api:
+    image: clonardo/socketio-backend
+    ports:
+      - "3000:3000"
+  client:
+    environment:
+      - HOST=api
+    image: rajat:latest
+    build:
+      context: .
+    stdin_open: true
+    depends_on:
+      - api
