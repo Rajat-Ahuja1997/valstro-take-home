@@ -28,3 +28,6 @@ docker-compose build && docker-compose run --rm client
 ```
 
 ### Testing
+```bash
+npm run test
+```
