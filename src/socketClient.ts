@@ -8,9 +8,6 @@ class SocketClient {
   // @ts-ignore
   private rl: readline.Interface;
 
-  // so we don't prompt the user while we are processing the server response
-  private processingResponse: boolean = false;
-
   constructor() {
     if (process.env.HOST) {
       this.apiUrl = `http://${process.env.HOST}:3000`;
@@ -51,17 +48,12 @@ class SocketClient {
       console.log(this.formatResult(res));
     
       if (res.resultCount === res.page) {
-        this.processingResponse = false;
+        this.query();
       }
     });
   }
   
-  query = () => {
-    if (this.processingResponse) {
-      setTimeout(() => this.query(), 1000);
-      return;
-    }
-      
+  query = () => {      
     this.rl.question('What character would you like to search for? ', (query: string) => {
       if (!query) {
         this.close();
@@ -69,10 +61,8 @@ class SocketClient {
       }
   
       console.log(`Searching for ${query}...`)
-      this.processingResponse = true;
       
       this.socket.emit('search', {query: query});
-      this.query();
     });
   };
   
